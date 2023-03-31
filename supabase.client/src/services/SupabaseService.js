@@ -54,11 +54,11 @@ class SupabaseService {
       logger.error(error)
     }
   }
+
   /**
    *
    * @param {string} fileName path to file to remove from supabase including and folder names ('MyCat.jpg) or  ('cat_pictures/MyCat.jpg')
    */
-
   async remove(fileName) {
     try {
       const res = await supabase.storage.from(bucket).remove([fileName])
