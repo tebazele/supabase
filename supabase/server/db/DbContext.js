@@ -1,6 +1,5 @@
 import mongoose from 'mongoose'
 import { AccountSchema } from '../models/Account'
-import { ValueSchema } from '../models/Value'
 import { PolaroidSchema } from '../models/Polaroid.js';
 
 class DbContext {

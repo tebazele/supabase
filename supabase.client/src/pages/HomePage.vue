@@ -1,6 +1,6 @@
 <template>
   <div class="container-fluid">
-    <section class="masonry my-2">
+    <section class="masonry my-4">
       <div class="item text-center" v-for="p in polaroids">
         <div class=" bg-white rounded p-0 elevation-2 polaroid">
           <img :src="p.imgUrl" class="img-fluid rounded-top" alt="">
@@ -10,7 +10,8 @@
         <button v-if="account.id == p.creatorId" @click="deletePolaroid(p.id)" class="btn btn-danger delete-btn"
           title="delete me"><i class="mdi mdi-delete-forever"></i></button>
       </div>
-      <div class="item bg-white rounded elevation-2 p-2">
+      <!-- SECTION inline form -->
+      <div v-if="account.id" class="item bg-white rounded elevation-2 p-2">
         <h5 class="text-primary"><i class="mdi mdi-plus"></i> <i class="mdi mdi-image"></i></h5>
         <form @submit.prevent="uploadPolaroid">
           <div class="mb-3">
@@ -29,7 +30,6 @@
 
 <script>
 import { logger } from '../utils/Logger.js';
-import { supabaseService } from '../services/SupabaseService.js'
 import { onMounted, ref } from 'vue';
 import { computed } from '@vue/reactivity';
 import { AppState } from '../AppState.js';
@@ -71,6 +71,10 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.container-fluid {
+  overflow-x: hidden;
+}
+
 .masonry {
   columns: 250px;
 
