@@ -13,6 +13,10 @@
           <a href="https://supabase.com/docs/reference/javascript/start" target="_blank"><i class="mdi mdi-link"></i>
             supabase docs</a>
         </div>
+        <div class="mt-2 text-info ps-2">
+          <a href="https://github.com/MickShannahan/supabase" target="_blank"><i class="mdi mdi-github"></i>
+            project repo</a>
+        </div>
       </div>
     </section>
     <section class="pb-5">
