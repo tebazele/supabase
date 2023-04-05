@@ -35,8 +35,8 @@ onBeforeMount(() => {
   loadMarkdown()
 })
 onMounted(() => {
-  setTimeout(attachCopy, 100)
-  setTimeout(createNav, 100)
+  setTimeout(attachCopy, 500)
+  setTimeout(createNav, 500)
 })
 async function loadMarkdown() {
   try {
