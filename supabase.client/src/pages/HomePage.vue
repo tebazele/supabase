@@ -1,29 +1,33 @@
 <template>
   <div class="container-fluid">
+    <!-- SECTION polaroids masonry -->
     <section class="masonry my-4">
+      <!-- STUB single polaroid -->
       <div class="item text-center" v-for="p in polaroids">
         <div class=" bg-white rounded p-0 elevation-2 polaroid">
-          <img :src="p.imgUrl" class="img-fluid rounded-top" alt="">
+          <img :src="p.imgUrl" class="img-fluid rounded-top" :alt="p.title" width="640" height="360">
           <h4 class="p-1">{{ p.title }}</h4>
           <p class="p-1">{{ formatDate(p.createdAt) }}</p>
         </div>
         <button v-if="account.id == p.creatorId" @click="deletePolaroid(p.id)" class="btn btn-danger delete-btn"
           title="delete me"><i class="mdi mdi-delete-forever"></i></button>
       </div>
+      <!--  -->
       <!-- SECTION inline form -->
       <div v-if="account.id" class="item bg-white rounded elevation-2 p-2">
         <h5 class="text-primary"><i class="mdi mdi-plus"></i> <i class="mdi mdi-image"></i></h5>
         <form @submit.prevent="uploadPolaroid">
           <div class="mb-3">
             <label for="">name</label>
-            <input class="form-control" type="text" v-model="editable.title">
+            <input class="form-control" type="text" v-model="editable.title" maxlength="15" required>
           </div>
           <div class="mb-3">
-            <input class="form-control" type="file" name="fileInput">
+            <input class="form-control" type="file" accept="image/*" name="fileInput" required>
           </div>
           <button class="btn btn-primary w-100">submit</button>
         </form>
       </div>
+      <!--  -->
     </section>
   </div>
 </template>
@@ -53,6 +57,7 @@ export default {
       account: computed(() => AppState.account),
       polaroids: computed(() => AppState.polaroids),
       uploadPolaroid(e) {
+        // file inputs regardless of files chosen return an array
         const file = e.target.fileInput.files[0] // file cannot be v-modeled
         polaroidsService.createPolaroid(file, editable.value)
         editable.value = {} // reset editable
@@ -82,11 +87,18 @@ export default {
     position: relative;
     display: inline-block;
     width: 100%;
+    margin-top: 1em;
 
     &:hover .delete-btn {
       opacity: 1;
       transform: scale(1) translate(0px, 0px);
       transition: .2s .3s ease;
+    }
+
+    img {
+      margin: 0;
+      border-radius: unset;
+      width: 100%;
     }
   }
 }

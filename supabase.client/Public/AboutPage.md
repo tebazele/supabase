@@ -1,3 +1,4 @@
+
 # File upload with supabase ![supabase_logo](/imgs/supabase-logo-icon_1.png)
 
 
@@ -147,10 +148,61 @@ Supabase is now set up to allow authorized users to use interact with it.
 
 ## app setup
 
-Now we will want to set up our application to interact with supabase. Starting with installing the supabase node package. Go to your apps client folder (if you app only has a client then no need to go anywhere) and run
+Now we will want to set up our application to interact with supabase. Starting with installing the supabase node package. Go to your apps client folder (if you app only has a client then no need to go anywhere) and run this in your terminal.
+
 ```
-npm i supabase
+npm install @supabase/supabase-js
 ```
+If you look inside your package.json, you should now see supabase as a dependency.
+
+Next head over to your env.js and add two variables to be exported. One for our supabase project url, and one for our supabase public api key
+
+![env.js new exports](/imgs/envJs-add.png)
+
+Enter these values. You can find them in the `Project settings - API` tab
+
+![supabase api tokens](/imgs/supabase-url.png)
+
+## supabase service
+
+In the code for this project there is a `SupabseService.js` that is in our services folder. This file includes all the code necessary to connect our supabase and create a "client" to interact with our supabase project. You are welcome to use this for your app but it would be wise to look it over and understand it's function. It includes 4 methods. `init`, `upload`, `remove` and `list`.  
+
+  - init, is what creates an instance of our supabase client that the other functions can use. Without this successfully none of the other function will work. [supabase docs initializing](https://supabase.com/docs/reference/javascript/initializing)
+
+  - upload, simple enough this will upload a file to supabase to be stored, and returns the url of that file that was saved. It takes in two arguments, the file to be uploaded and the name it is stored under. Something to keep in mind about how supabase uploads files is that folders can be created by including slashes `/` in the name. just uploading `cuteCats.jpg` would upload that file to the base of our project. For organization it would be wise to instead pass `cat-pictures/cuteCats.jpg` for instance.  In this project we actually use the user's Id for folder names. So any files an user uploads wont overlap with another users. [supabase docs upload file](https://supabase.com/docs/reference/javascript/storage-from-upload)
+
+  - remove, anything stored should be removable. This function just takes the name of the file you want to remove, and it removes it! The only consideration we need to make when running this function is if our uploaded file name included slashes (was stored in a folder) then when we removed we include those same folders. If `cuteCats.jpg` was uploaded into the `cat-pictures` folder, then the name that we need to pass should be `cat-pictures/cuteCats.jpg`. [supabase docs delete a file](https://supabase.com/docs/reference/javascript/storage-from-remove)
+
+  - list, this will list all of the files a particular user has uploaded to supabase. [supabase docs list files](https://supabase.com/docs/reference/javascript/storage-from-list)
+
+  ## initialize supabase
+
+  In this current project, and likely in yours, you will want to initialize supabase whenever a user logs in. If file upload is not a priority for your application then this could be put off until the form that includes the file upload is opened but for simplicity just creating this connection with the user has been authorized works well.
+
+  In the `AuthService.js`, right after the user info has been retrieved from auth0, we will want to run the `init` method from the supabase service, passing 2 arguments. 
+
+  - The first is the name of your storage bucket, ours in this project is called 'sandbox'. 
+  - The Second argument will need to be the supabase token that our auth0 rule signed. That token gets attached to the userInfo object, so it should be accessible on `user` at this point.
+
+  ![initalize supabase 10_vh_](/imgs/supabase-init.png)
+
+  > Our `init` function will use that bucket name, token along with, the site url and public api key we added in our env.js to connect with supabase, so make sure all of that is filled in before we try to init.
+
+  ## using supabase with your app
+
+In this project here, we use 'polaroids' or simple picture objects with a title and a created with our api, while using file a file browser to pick an image to upload to supabase. Now when users want to create a polaroid, the user actions are almost identical to what we are used to, but we take an extra step in our service. before we post the polaroid data to our api, we first upload the image to supabase.
+
+
+Start with the code in our app to backwards engineer how you could use file upload in yours.  All of the code used is on the `HomePage.vue` file.  We have a form with two inputs, one for a title and one to allow the user to select a file.  While the title is attached to a editable ref, we grab the file only once the form is submitted. Then passing both of these separately to our `polaroidService`.
+
+
+From the `polaroidService` upload our file and save the returned url to the polaroidData, then send that polaroid data to our own api. Supabase will store your files but your api will still store the url to access those files. *The data displayed on the page are still objects we store in our own database*.
+
+  ![create a polaroid w_100_](/imgs/polaroid-create.png)
+
+When we want to show the polaroids people have uploaded to the site nothing has really changed. We will still just get them from our api. Our database still stores url strings to display the correct image but now that is an image we are storing on supabase in our own project.
+
+
 
 
 
