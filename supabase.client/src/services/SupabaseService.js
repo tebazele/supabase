@@ -33,7 +33,7 @@ class SupabaseService {
         }
       })
       // call on load
-      this.list('mick')
+      this.list('jeanne')
     } catch (error) {
       logger.log(error)
     }

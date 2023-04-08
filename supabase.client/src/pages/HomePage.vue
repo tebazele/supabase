@@ -3,7 +3,7 @@
     <!-- SECTION polaroids masonry -->
     <section class="masonry my-4">
       <!-- STUB single polaroid -->
-      <div class="item text-center" v-for="p in polaroids">
+      <div class="item text-center" v-for="p in polaroids" :key="p.id">
         <div class=" bg-white rounded p-0 elevation-2 polaroid">
           <img :src="p.imgUrl" class="img-fluid rounded-top" :alt="p.title" width="640" height="360">
           <h4 class="p-1">{{ p.title }}</h4>
