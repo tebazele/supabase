@@ -33,6 +33,8 @@ class SupabaseService {
         }
       })
       // call on load
+      // FIXME tutorial -- change this? What is this exactly?
+
       this.list('jeanne')
     } catch (error) {
       logger.log(error)
